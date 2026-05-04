@@ -12,7 +12,16 @@ Version numbers follow the project convention `MAJOR-MINOR-PATCH` :
 
 ## [Unreleased]
 
-## [0-3-1] - 2026-05-04
+## [0-4-0] - 2026-05-04
+
+### Changed
+- **Refactoring de `getLeverage`** : `gb.data.leverage` s'est avéré non fiable en mode simulation.
+  La source de levier est désormais `gb.data.pairLedger.LEVERAGE`, qui reflète la valeur effective
+  consolidée par Gunbot (override ou stratégie) sans nécessiter de résolution manuelle.
+  Ce changement constitue un refactoring d'envergure de la source de vérité du levier, justifiant
+  une montée de version MINOR. Les messages de log internes ont été mis à jour en conséquence.
+
+
 
 ### Fixed
 - **Suppression de `'use strict'`** : la directive était incompatible avec l'environnement

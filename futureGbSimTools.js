@@ -1,6 +1,6 @@
 /**
  * futureGbSimTools
- * Version : 0-3-1
+ * Version : 0-4-0
  *
  * Module Gunbot fournissant des outils et propriétés pour stratégies futures
  * compatibles avec le mode Simulation Gunbot.
@@ -39,13 +39,13 @@ function log(msg) {
 }
 
 /**
- * Lit le levier effectif depuis gb.data.leverage.
- * Cette propriété est fournie nativement par l'échange et constitue
- * la source de vérité unique pour le levier de la paire courante.
- * Elle est utilisée à la fois par ce module et par la stratégie custom,
- * garantissant l'utilisation d'une valeur cohérente et unique.
+ * Lit le levier effectif depuis gb.data.pairLedger.LEVERAGE.
+ * Cette propriété est lue dans le Ledger Gunbot de la paire, où Gunbot
+ * consolide automatiquement la valeur effective issue de la config (override
+ * ou stratégie), ce qui rend inutile toute résolution manuelle.
+ * gb.data.leverage n'est pas utilisé car il s'est avéré non fiable en simulation.
  *
- * Retourne null si gb.data.leverage est absent, nul ou invalide,
+ * Retourne null si la propriété est absente, nulle ou invalide,
  * avec un message de log explicite sur la cause de l'erreur.
  *
  * @param {object} gb
@@ -53,18 +53,19 @@ function log(msg) {
  */
 function getLeverage(gb) {
     try {
-        const lev = parseFloat(gb.data.leverage);
+        const rawLev = gb.data.pairLedger && gb.data.pairLedger.LEVERAGE;
+        const lev = parseFloat(rawLev);
         if (!isNaN(lev) && lev > 0) {
-            log('getLeverage : gb.data.leverage = ' + lev);
+            log('getLeverage : gb.data.pairLedger.LEVERAGE = ' + lev);
             return lev;
         }
         // Valeur présente mais inexploitable (NaN, 0, négative)
-        log('getLeverage : ERREUR – gb.data.leverage est absent, nul ou invalide'
-            + ' (valeur brute : ' + gb.data.leverage + ').'
+        log('getLeverage : ERREUR – gb.data.pairLedger.LEVERAGE est absent, nul ou invalide'
+            + ' (valeur brute : ' + rawLev + ').'
             + ' Impossible de calculer les marges.');
         return null;
     } catch (e) {
-        log('getLeverage : ERREUR – exception lors de la lecture de gb.data.leverage : '
+        log('getLeverage : ERREUR – exception lors de la lecture de gb.data.pairLedger.LEVERAGE : '
             + e.message + '. Impossible de calculer les marges.');
         return null;
     }
@@ -472,10 +473,10 @@ function simCurrentSide(gb) {
  */
 module.exports = function (gb) {
 
-    log('=== futureGbSimTools v0-3-1 initialisé ===');
+    log('=== futureGbSimTools v0-4-0 initialisé ===');
     log('Exchange : ' + (gb && gb.data && gb.data.exchangeName ? gb.data.exchangeName : '?'));
     log('Pair     : ' + (gb && gb.data && gb.data.pairName     ? gb.data.pairName     : '?'));
-    log('Leverage : ' + (gb && gb.data && gb.data.leverage     ? gb.data.leverage     : '?'));
+    log('Leverage : ' + (gb && gb.data && gb.data.pairLedger && gb.data.pairLedger.LEVERAGE ? gb.data.pairLedger.LEVERAGE : '?'));
 
     if (!gb || !gb.data) {
         console.error('[futureGbSimTools] ERREUR CRITIQUE : objet gb manquant ou invalide.');
