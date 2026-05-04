@@ -12,6 +12,13 @@ Version numbers follow the project convention `MAJOR-MINOR-PATCH` :
 
 ## [Unreleased]
 
+## [0-4-1] - 2026-05-04
+
+### Fixed
+- **Correction du chemin d'accès à `LEVERAGE`** : le chemin `gb.data.pairLedger.LEVERAGE` était
+  incorrect. La propriété est accessible via `gb.data.pairLedger.whatstrat.LEVERAGE`. L'accès
+  sécurisé chaîné a été mis à jour en conséquence, ainsi que tous les messages de log associés.
+
 ## [0-4-0] - 2026-05-04
 
 ### Changed

@@ -1,6 +1,6 @@
 /**
  * futureGbSimTools
- * Version : 0-4-0
+ * Version : 0-4-1
  *
  * Module Gunbot fournissant des outils et propriétés pour stratégies futures
  * compatibles avec le mode Simulation Gunbot.
@@ -39,7 +39,7 @@ function log(msg) {
 }
 
 /**
- * Lit le levier effectif depuis gb.data.pairLedger.LEVERAGE.
+ * Lit le levier effectif depuis gb.data.pairLedger.whatstrat.LEVERAGE.
  * Cette propriété est lue dans le Ledger Gunbot de la paire, où Gunbot
  * consolide automatiquement la valeur effective issue de la config (override
  * ou stratégie), ce qui rend inutile toute résolution manuelle.
@@ -53,19 +53,19 @@ function log(msg) {
  */
 function getLeverage(gb) {
     try {
-        const rawLev = gb.data.pairLedger && gb.data.pairLedger.LEVERAGE;
+        const rawLev = gb.data.pairLedger && gb.data.pairLedger.whatstrat && gb.data.pairLedger.whatstrat.LEVERAGE;
         const lev = parseFloat(rawLev);
         if (!isNaN(lev) && lev > 0) {
-            log('getLeverage : gb.data.pairLedger.LEVERAGE = ' + lev);
+            log('getLeverage : gb.data.pairLedger.whatstrat.LEVERAGE = ' + lev);
             return lev;
         }
         // Valeur présente mais inexploitable (NaN, 0, négative)
-        log('getLeverage : ERREUR – gb.data.pairLedger.LEVERAGE est absent, nul ou invalide'
+        log('getLeverage : ERREUR – gb.data.pairLedger.whatstrat.LEVERAGE est absent, nul ou invalide'
             + ' (valeur brute : ' + rawLev + ').'
             + ' Impossible de calculer les marges.');
         return null;
     } catch (e) {
-        log('getLeverage : ERREUR – exception lors de la lecture de gb.data.pairLedger.LEVERAGE : '
+        log('getLeverage : ERREUR – exception lors de la lecture de gb.data.pairLedger.whatstrat.LEVERAGE : '
             + e.message + '. Impossible de calculer les marges.');
         return null;
     }
@@ -473,10 +473,10 @@ function simCurrentSide(gb) {
  */
 module.exports = function (gb) {
 
-    log('=== futureGbSimTools v0-4-0 initialisé ===');
+    log('=== futureGbSimTools v0-4-1 initialisé ===');
     log('Exchange : ' + (gb && gb.data && gb.data.exchangeName ? gb.data.exchangeName : '?'));
     log('Pair     : ' + (gb && gb.data && gb.data.pairName     ? gb.data.pairName     : '?'));
-    log('Leverage : ' + (gb && gb.data && gb.data.pairLedger && gb.data.pairLedger.LEVERAGE ? gb.data.pairLedger.LEVERAGE : '?'));
+    log('Leverage : ' + (gb && gb.data && gb.data.pairLedger && gb.data.pairLedger.whatstrat && gb.data.pairLedger.whatstrat.LEVERAGE ? gb.data.pairLedger.whatstrat.LEVERAGE : '?'));
 
     if (!gb || !gb.data) {
         console.error('[futureGbSimTools] ERREUR CRITIQUE : objet gb manquant ou invalide.');
