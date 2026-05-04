@@ -12,6 +12,37 @@ Version numbers follow the project convention `MAJOR-MINOR-PATCH` :
 
 ## [Unreleased]
 
+## [0-3-1] - 2026-05-04
+
+### Fixed
+- **Suppression de `'use strict'`** : la directive était incompatible avec l'environnement
+  d'exécution Gunbot (`eval` via `gb.method.require`). Elle provoquait une sortie silencieuse
+  du module sans propagation d'exception au `catch` de la stratégie appelante, se manifestant
+  par un "Reach end of user code" sans aucun log.
+
+## Modification du nom de fichier du module
+- **Suppression de la version dans le nom de fichier** : Permet d'éviter de mettre à jour les appels "require" dans les stratégies appelant le module lors des changements de version.
+
+## [0-3-0] - 2026-05-04
+
+### Changed
+- **Refactoring de `getLeverage` : source unique `gb.data.leverage`**.  
+  Le levier est désormais lu exclusivement depuis `gb.data.leverage`, propriété native fournie
+  directement par l'échange, garantissant que le module et la stratégie custom utilisent
+  toujours la même valeur.  
+  L'ancienne lecture via `gb.data.whatstrat.LEVERAGE` est supprimée.
+
+### Fixed
+- **Comportement sur levier invalide : `null` au lieu de `1`**.  
+  Si `gb.data.leverage` est absent, nul, ou invalide (NaN, 0, négatif), `getLeverage` retourne
+  désormais `null` avec un message de log explicite identifiant `gb.data.leverage` comme cause
+  de l'erreur.  
+  Les fonctions `simTotalPositionInitialMargin` et `simTotalOpenOrderInitialMargin` propagent ce
+  `null` et retournent elles-mêmes `null` (au lieu de calculer une valeur incorrecte avec un
+  levier silencieusement substitué).
+
+---
+
 ## [0-2-0] - 2026-05-01
 
 ### Added
@@ -72,6 +103,8 @@ Version numbers follow the project convention `MAJOR-MINOR-PATCH` :
 - Retour `null` sur toutes les valeurs en cas d'erreur ou de propriété `gb` manquante.
 - Export sous forme d'objet plat CommonJS (`module.exports = function(gb) { ... }`).
 
+[0-3-1]: https://github.com/votre-repo/futureGbSimTools/releases/tag/0-3-1
+[0-3-0]: https://github.com/votre-repo/futureGbSimTools/releases/tag/0-3-0
 [0-2-0]: https://github.com/votre-repo/futureGbSimTools/releases/tag/0-2-0
 [0-1-1]: https://github.com/votre-repo/futureGbSimTools/releases/tag/0-1-1
 [0-1-0]: https://github.com/votre-repo/futureGbSimTools/releases/tag/0-1-0

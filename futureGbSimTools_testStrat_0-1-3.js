@@ -2,6 +2,7 @@
 
 /**
  * futureGbSimTools_test
+ * Version : 0-1-1
  *
  * Stratégie Gunbot custom de test pour le module futureGbSimTools.
  * Objectif : charger le module, appeler toutes ses propriétés et afficher
@@ -15,16 +16,18 @@
 // ─────────────────────────────────────────────
 // CHARGEMENT DU MODULE
 // ─────────────────────────────────────────────
+console.log("Avant l'appel au module");
 
 let simTools;
 
 try {
-    simTools = gb.method.require(gb.modulesPath + '/futureGbSimTools_0-3-0')(gb);
+    simTools = gb.method.require(gb.modulesPath + '/futureGbSimTools')(gb);
 } catch (e) {
     console.error('[TEST] Impossible de charger futureGbSimTools : ' + e.message);
-    gb.method.finalize(gb.data.openOrders, gb.data.openOrders);
     return;
 }
+
+console.log("Après l'appel au module");
 
 // ─────────────────────────────────────────────
 // AFFICHAGE DES PROPRIÉTÉS
